@@ -1,8 +1,3 @@
----
-output:
-  pdf_document: default
-  html_document: default
----
 # Firm-level production networks: what do we (really) know?
 
 by Andrea Bacilieri, András Borsos, Pablo Astudillo-Estevez, Mads Hoefer and François Lafond
