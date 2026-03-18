@@ -1,0 +1,14 @@
+# Ignore all files in the data directory
+data/analysis/**/*.csv
+data/analysis/**/*.docx
+data/cleaned/**/*.xlsx
+data/cleaned/**/*.csv
+data/raw/**/*.txt
+data/raw/**/*.csv
+*.icloud
+
+.DS_Store
+Icon
+.Rproj.user
+.Rhistory
+code/.Rhistory
