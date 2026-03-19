@@ -36,9 +36,13 @@ rootfolder <- strsplit(rstudioapi::getSourceEditorContext()$path,'/code')[[1]][1
 dirdata <- file.path(rootfolder, 'data', 'analysis')
 # Folder to Store output
 dirOutput <- file.path(rootfolder, 'results', 'figures')
+
 # For plots
 width_LaTeX = 418.25368  # in pt
 source(file.path(rootfolder, 'code', 'utils_plots', 'set_size.R'))
+
+# Functions
+source(file.path('code', 'utils', 'fun_bin_scatter_degree_size.R'))
 
 
 # ------------------------------------------------
@@ -56,62 +60,6 @@ data$Hungary <- df_[year == 2021, c('outD', 'inD', 'outS', 'inS', 'year')]
 # --------------------------------------------
 # Create bin scatter 
 # --------------------------------------------
-fix_zero_log_scale <- function(kk){
-  if(length(kk) > 0){
-    for(k in kk){
-      kk[k] <- 0.02
-    }
-  }
-}
-
-prepare_data_plot <- function(df_degs){
-  # Define Strength as average of in- and out-
-  df_degs$strengths <- (df_degs$inS + df_degs$outS)/2
-  all(df_degs$strengths > 0)
-  # Define bins
-  range_bins <- range(log(df_degs$strengths))
-  nb <- 80
-  #BINS <- exp(seq(from = range_bins[1], to = range_bins[2], length = nb))
-  BINS <- seq(from = range_bins[1], to = range_bins[2], length = nb)
-  
-  kbar_in <- kbar_out <- nn <- kmed_in <- kmed_out <- k90_in <- k90_out <- rep(NA, nb-1)
-  for(i in 1:(nb-1)){
-    if(i < (nb - 1)){
-      #df_ <- df_degs[(strengths >= BINS[i]) & (strengths < BINS[i+1])]
-      df_ <- df_degs[(log(strengths) >= BINS[i]) & (log(strengths) < BINS[i+1])]
-    }else if(i == (nb - 1)){
-      # Need to include last upper bound, otherwise last firm not included
-      # adjust for floating-point precision differences due to exp(log(range_bins))
-      #df_ <- df_degs[(strengths >= BINS[i]) & (strengths <= BINS[i+1] + 1e-4)]
-      df_ <- df_degs[(log(strengths) >= BINS[i]) & (log(strengths) <= BINS[i+1])]
-    }
-    kbar_in[i]  <- mean(df_$inD)
-    kbar_out[i] <- mean(df_$outD)
-    kmed_in[i]  <- median(df_$inD)
-    kmed_out[i] <- median(df_$outD)
-    k90_in[i]  <- quantile(df_$inD, 0.9)
-    k90_out[i] <- quantile(df_$outD, 0.9)
-    nn[i] <- dim(df_)[1]
-  }
-
-  # Store data for plotting
-  df_plot <- data.table(mids = rollmean(exp(BINS), 2),
-                        mids_geom = exp(rollmean(BINS, 2)),
-                        mean_deg = kbar_in,
-                        med_deg = kmed_in,
-                        pct90_deg = k90_in,
-                        nn = nn)
-  df_plot$type <- 'In-degree'
-  df_ <- data.table(mids = rollmean(exp(BINS), 2),
-                    mids_geom = exp(rollmean(BINS, 2)),
-                    mean_deg = kbar_out,
-                    med_deg = kmed_out,
-                    pct90_deg = k90_out,
-                    nn = nn)
-  df_$type <- 'Out-degree'
-  df_plot <- rbind(df_plot, df_)
-}
-
 k <- 0
 for (nm in names(data)) {
   df_ <- prepare_data_plot(data[[nm]])
@@ -136,7 +84,6 @@ df_cross <- merge(df_plot[country == 'Ecuador' & type == 'In-degree'],
 df_cross <- na.omit(df_cross)
 df_cross[, diff := mean_deg_in - mean_deg_out]
 df_cross[diff < 0, c('mids_geom', 'diff', 'mean_deg_in', 'mean_deg_out')]
-# size = 2,016,569, mean in-deg = 131.8684, mean out-deg = 152.6101
 
 # Hungary
 df_cross <- merge(df_plot[country == 'Hungary' & type == 'In-degree'], 
@@ -145,9 +92,7 @@ df_cross <- merge(df_plot[country == 'Hungary' & type == 'In-degree'],
 df_cross <- na.omit(df_cross)
 df_cross[, diff := mean_deg_in - mean_deg_out]
 df_cross[diff < 0 & mids_geom > 10^3, c('mids_geom', 'diff', 'mean_deg_in', 'mean_deg_out')]
-# size = 345,288.2    mean in-deg = 114.2119     mean out-deg = 135.3619
 df_cross[diff > 0 & mids_geom < 10^3, c('mids_geom', 'diff', 'mean_deg_in', 'mean_deg_out')]
-# size = 140.4985, mean in-deg = 1.490262, mean out-deg = 1.120078
 
 
 # ------------------------------------------------------------------------------
@@ -156,16 +101,11 @@ df_cross[diff > 0 & mids_geom < 10^3, c('mids_geom', 'diff', 'mean_deg_in', 'mea
 pal <- c('black', 'slateblue1')
 
 x_breaks_e <- scales::log_breaks()(df_plot[country == 'Ecuador']$mids_geom)
-#x_breaks_e <- sort(unique(c(1, x_breaks)))
 y_breaks_e <- scales::log_breaks(n = 4)(df_plot[country == 'Ecuador' & mean_deg > 1]$mean_deg)
-#y_breaks_e <- sort(unique(c(1, y_breaks)))
 
 x_breaks_h <- scales::log_breaks(n = 6)(df_plot[country == 'Hungary']$mids_geom)
-#x_breaks_h <- sort(unique(c(1, x_breaks)))
 y_breaks_h <- scales::log_breaks(n = 5)(df_plot[country == 'Hungary']$mean_deg)
-#y_breaks_h <- sort(unique(c(1, y_breaks)))
 
-#df_plot <- df_plot[nn > 0]
 
 ## ECUADOR ##
 
@@ -224,10 +164,6 @@ p2 <- ggplot(df_plot[country == 'Ecuador'], aes(x = mids_geom, y = med_deg, colo
   scale_shape_manual(values = c(3, 2, 1, 0)) +
   scale_colour_manual(values = pal) +
   
-  
-  #annotate("text", x = 0.01, y = 10^3, label = "Ecuador, 2015", 
-   #        color = "black", hjust = "left", size = 3) +
-  
   theme_bw() +
   
   theme(axis.line = element_line(colour = "gray"),
@@ -266,10 +202,6 @@ p3 <- ggplot(df_plot[country == 'Ecuador'], aes(x = mids_geom, y = pct90_deg, co
   scale_shape_manual(values = c(3, 2, 1, 0)) +
   scale_colour_manual(values = pal) +
   
-  
-  #annotate("text", x = 0.01, y = 9*10^3, label = "Ecuador, 2015", 
-   #        color = "black", hjust = "left", size = 3) +
-  
   theme_bw() +
   
   theme(axis.line = element_line(colour = "gray"),
@@ -294,7 +226,6 @@ p3 <- ggplot(df_plot[country == 'Ecuador'], aes(x = mids_geom, y = pct90_deg, co
   
   guides(colour = guide_legend(ncol = 1, override.aes = list(alpha = 1, size = 1)),
          shape  = guide_legend(ncol = 1, override.aes = list(alpha = 1, size = 1)))
-
 
 
 ## HUNGARY ##
@@ -354,9 +285,6 @@ p5 <- ggplot(df_plot[country == 'Hungary'], aes(x = mids_geom, y = med_deg, colo
   scale_shape_manual(values = c(3, 2, 1, 0)) +
   scale_colour_manual(values = pal) +
   
-  #annotate("text", x = 1, y = 2*10^4, label = "Hungary, 2021", 
-   #        color = "black", hjust = "left", size = 3) +
-  
   theme_bw() +
   
   theme(axis.line = element_line(colour = "gray"),
@@ -395,9 +323,6 @@ p6 <- ggplot(df_plot[country == 'Hungary'], aes(x = mids_geom, y = pct90_deg, co
   scale_shape_manual(values = c(3, 2, 1, 0)) +
   scale_colour_manual(values = pal) +
   
-  #annotate("text", x = 1, y = 2*10^4, label = "Hungary, 2021", 
-   #        color = "black", hjust = "left", size = 3) +
-  
   theme_bw() +
   
   theme(axis.line = element_line(colour = "gray"),
@@ -432,8 +357,6 @@ g <- ggarrange(p1 + rremove('xlab'), p2 + rremove('xlab'), p3 + rremove('xlab'),
                widths = c(1, 1, 1), 
                heights = c(0.9, 1))
 
-
-
 # Export 
 fig_size <- set_size(width_LaTeX, fraction = 1)
 width_l <- fig_size[[1]] + 0.4
@@ -442,8 +365,4 @@ height_l <- fig_size[[2]] + 0.8
 filename <- paste(dirOutput, '/B3_fig_mean_degree_strengths.png', sep = .Platform$file.sep)
 ggsave(plot = g, filename = filename, width = width_l, height = height_l, dpi = 600)
 
-
-
-filename <- 'bins_degree_size.csv'
-csv_name <- file.path(dirOutput, filename)
-write.csv(df_plot, csv_name, row.names = F)
+print('Figure B.3: Binned scatter plots of the conditional relationships among size and in- and out-degrees exported.')

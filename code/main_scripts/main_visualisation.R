@@ -108,6 +108,16 @@ source(file.path('code', 'industrial_analysis', 'number_firms_no_indu_code.R'))
 source(file.path('code', 'appendix', 'covariance_matrix_tables.R'))
 
 #--------------------------------------------------------------------------------------------------
+# Figure B.2: Empirical CCDF of the number of suppliers and the number of customers
+#--------------------------------------------------------------------------------------------------
+source(file.path('code', 'appendix', 'degree_distributions_crossing.R'))
+
+#--------------------------------------------------------------------------------------------------
+# Figure B.3: Binned scatter plots of the conditional relationships among size and in- and out-degrees
+#--------------------------------------------------------------------------------------------------
+source(file.path('code', 'appendix', 'bin_scatter_degree_size.R'))
+
+#--------------------------------------------------------------------------------------------------
 # Figure B.1: Binned scatter plots for the conditional relations
 # Function separated out to allow for different number of bins
 #--------------------------------------------------------------------------------------------------
