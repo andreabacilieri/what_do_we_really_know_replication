@@ -125,7 +125,7 @@ addtorow$command <- c('\\begin{table}[ht]
 \\caption{Assortativity coefficients}
 \\begin{tabular}{llrrrrrl}
 \\toprule ',
-'Dataset & Year & $r_{k,k}$ & $r_{k^\\text{in},k^\\text{out}}$ & $r_{k^\\text{out},k^\\text{in}}$ & $r_{k^\\text{in},k^\\text{in}}$ & $r_{k^\\text{out},k^\\text{out}}$ \\\\',
+'Dataset & Year & $r_{k,k}$ & $r_{k^\\text{in},k^\\text{out}}$ & $r_{k^\\text{out},k^\\text{in}}$ & $r_{k^\\text{in},k^\\text{in}}$ & $r_{k^\\text{out},k^\\text{out}}$ & Source \\\\',
 '\\midrule ',
 '\\hdashline ',
 '\\bottomrule \\multicolumn{8}{l}{ \\begin{minipage}{16cm}~\\\\%
