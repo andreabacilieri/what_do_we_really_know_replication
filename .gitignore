@@ -1,6 +1,9 @@
-# Ignore entire data and results directories
-data/
-results/
+# Ignore contents of data and results, but keep folder structure
+data/*
+!data/**/.gitkeep
+
+results/*
+!results/**/.gitkeep
 
 # macOS / system files
 .DS_Store
@@ -11,7 +14,6 @@ Icon
 .Rproj.user/
 .Rhistory
 .Rapp.history
-.Rprofile
 
 # Project-specific history files
 code/.Rhistory
