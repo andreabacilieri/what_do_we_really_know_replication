@@ -30,7 +30,7 @@ simulate_random_graphs(nSim = 100, nSim_pl = 10, nPairs = 10^4)
 
 # !! Set the python executable path here
 # change to your environment's python
-python_path <- "" 
+python_path <- ""
 if (is.na(python_path) || python_path == "") {
   stop(sprintf("Error Python executable not specified in python_path (see main_scripts/main_sim.R)."), call. = FALSE)
 }
