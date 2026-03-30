@@ -1,5 +1,6 @@
-# Ignore entire data directory
+# Ignore entire data and results directories
 data/
+results/
 
 # macOS / system files
 .DS_Store
