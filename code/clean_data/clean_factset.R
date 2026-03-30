@@ -69,12 +69,9 @@ fship <- fship[-torm,]
 fsc <- fread(file.path(dirdata, "supply_chain", "ent_scr_supply_chain.txt"), data.table = F, colClasses = "character")
 # all entries have a proper start year
 fsc[["START_DATE"]] <- as.numeric(substr(fsc[["START_DATE"]], 1, 4))
-# sometimes there is no end date
-sort(unique(substr(fsc$END_DATE, 1, 4)))
 # when there is no end date, it means the link is still active: we replace "" by "2024"
 fsc$END_DATE[fsc$END_DATE == ""] <- "2024"
 fsc[["END_DATE"]] <- as.numeric(substr(fsc[["END_DATE"]], 1, 4))
-all(sort(unique(fsc$END_DATE)) == 2013:2024)
 
 fsc <- fsc[, c("SUPPLIER_FACTSET_ENTITY_ID", "CUSTOMER_FACTSET_ENTITY_ID", "START_DATE", "END_DATE")]
 # remove duplicates
