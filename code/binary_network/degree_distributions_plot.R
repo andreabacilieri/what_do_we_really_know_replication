@@ -266,7 +266,7 @@ p1 <- ggplot(data = df_dens_in[inD > 0],  aes(x = inD, y = density_in, color = f
 
   scale_shape_manual(values = c(3, 1, 6)) +
 
-  labs(x = TeX(r'(In-degree (number of suppliers))'), y = TeX(r'($P(X \, > \, x)$)')) +
+  labs(x = TeX(r'(In-degree (number of suppliers))'), y = TeX(r'($P(X \, \geq \, x)$)')) +
 
   scale_x_log10(breaks =  scales::trans_breaks("log10", function(x) 10^x),
                 labels = scales::trans_format("log10", scales::math_format(10^.x)), limits = c(xmin, xmax)) +
@@ -323,7 +323,7 @@ p2 <- ggplot(data = df_dens_out[outD > 0],  aes(x = outD, y = density_out, color
 
   scale_shape_manual(values = c(3, 1, 6)) +
 
-  labs(x = TeX(r'(Out-degree (number of customers))'), y = TeX(r'($P(X \, > \, x)$)')) +
+  labs(x = TeX(r'(Out-degree (number of customers))'), y = TeX(r'($P(X \, \geq \, x)$)')) +
 
   scale_x_log10(breaks =  scales::trans_breaks("log10", function(x) 10^x),
                 labels = scales::trans_format("log10", scales::math_format(10^.x)), limits = c(xmin, xmax)) +

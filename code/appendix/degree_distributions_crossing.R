@@ -93,7 +93,6 @@ df_out <- df_ccdf_e[deg_type == "Out-degree", .(degree, ccdf_out = ccdf)]
 df_merge <- merge(df_in, df_out, by = "degree", all = TRUE)
 df_merge[, diff := ccdf_in - ccdf_out]
 df_merge <- data.table(df_merge)
-df_merge[diff < 0, ]
 
 # Hungary
 df_in  <- df_ccdf_h[deg_type == "In-degree",  .(degree, ccdf_in = ccdf)]
@@ -101,7 +100,6 @@ df_out <- df_ccdf_h[deg_type == "Out-degree", .(degree, ccdf_out = ccdf)]
 df_merge <- merge(df_in, df_out, by = "degree", all = TRUE)
 df_merge[, diff := ccdf_in - ccdf_out]
 df_merge <- data.table(df_merge)
-df_merge[diff < 0, ]
 
 
 # ------------------------------------------------------------------------------
@@ -122,7 +120,7 @@ p1 <- ggplot(df_ccdf[degree > 0], aes(x = degree, y = ccdf, colour = deg_type, s
   scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x),
                 labels = scales::trans_format("log10", scales::math_format(10^.x))) +
   
-  labs(x = TeX('Degree') , y = TeX(r'($P(X \, > \, x)$)')) +
+  labs(x = TeX('Degree') , y = TeX(r'($P(X \, \geq \, x)$)')) +
   scale_shape_manual(values = c(3, 6)) +
   scale_colour_manual(values = pal) +
   
