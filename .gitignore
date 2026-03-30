@@ -1,14 +1,23 @@
-# Ignore all files in the data directory
-data/analysis/**/*.csv
-data/analysis/**/*.docx
-data/cleaned/**/*.xlsx
-data/cleaned/**/*.csv
-data/raw/**/*.txt
-data/raw/**/*.csv
-*.icloud
+# Ignore entire data directory
+data/
 
+# macOS / system files
 .DS_Store
 Icon
-.Rproj.user
+*.icloud
+
+# R / RStudio
+.Rproj.user/
 .Rhistory
+.Rapp.history
+.Rprofile
+
+# Project-specific history files
 code/.Rhistory
+
+# renv (reproducibility setup)
+renv/library/
+
+# Logs and temporary files
+*.log
+*.tmp
