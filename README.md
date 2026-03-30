@@ -14,7 +14,7 @@ This README file provides all the information to replicate the results, i.e., th
 
 The empirical analysis uses confidential firm-level datasets that are subject to usage licences. Therefore, we cannot disclose or redistribute these datasets. We provide synthetic data to ensure that the code runs properly (see Section Synthetic data), but the results will deviate from the real data.
 
-A detailed description of the data sources and construction is given in Appendix A.2 of the article, available [here](https://doi.org/10.1016/j.jedc.2026.105313).
+A detailed description of the data sources and construction is given in Appendix A.2 of the article, available [here](https://www.inet.ox.ac.uk/publications/no-2025-14-firm-level-production-networks-what-do-we-really-know).
 
 ------------------------------
 ## REQUIREMENTS
