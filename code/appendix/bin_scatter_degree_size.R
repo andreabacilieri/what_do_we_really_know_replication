@@ -42,7 +42,7 @@ width_LaTeX = 418.25368  # in pt
 source(file.path(rootfolder, 'code', 'utils_plots', 'set_size.R'))
 
 # Functions
-source(file.path('code', 'utils', 'fun_bin_scatter_degree_size.R'))
+source(file.path(rootfolder, 'code', 'utils', 'fun_bin_scatter_degree_size.R'))
 
 
 # ------------------------------------------------
@@ -103,8 +103,8 @@ pal <- c('black', 'slateblue1')
 x_breaks_e <- scales::log_breaks()(df_plot[country == 'Ecuador']$mids_geom)
 y_breaks_e <- scales::log_breaks(n = 4)(df_plot[country == 'Ecuador' & mean_deg > 1]$mean_deg)
 
-x_breaks_h <- scales::log_breaks(n = 6)(df_plot[country == 'Hungary']$mids_geom)
-y_breaks_h <- scales::log_breaks(n = 5)(df_plot[country == 'Hungary']$mean_deg)
+x_breaks_h <- scales::log_breaks(n = 6)(df_plot[country == 'Hungary' & mean_deg > 0]$mids_geom)
+y_breaks_h <- scales::log_breaks(n = 5)(df_plot[country == 'Hungary' & mean_deg > 0]$mean_deg)
 
 
 ## ECUADOR ##
